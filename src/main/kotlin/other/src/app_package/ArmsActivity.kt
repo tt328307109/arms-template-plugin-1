@@ -10,7 +10,7 @@ package ${provider.activityPackageName.value}
 import android.app.Activity
 import android.os.Bundle
 import com.jess.arms.di.component.AppComponent
-import cn.skytech.iglobalwin.app.base.SimpleBaseActivity
+import com.jess.arms.base.BaseActivity
 import ${provider.componentPackageName.value}.Dagger${provider.pageName.value}Component
 import ${provider.moudlePackageName.value}.${provider.pageName.value}Module
 import ${provider.contractPackageName.value}.${provider.pageName.value}Contract
@@ -19,7 +19,7 @@ import ${provider.appPackageName.value}.R
 import kotlinx.android.synthetic.main.base_title.*
 
 ${commonAnnotation(provider)}
-class ${provider.pageName.value}Activity : SimpleBaseActivity<${provider.pageName.value}Presenter>() , ${provider.pageName.value}Contract.View {
+class ${provider.pageName.value}Activity : BaseActivity<${provider.pageName.value}Presenter>() , ${provider.pageName.value}Contract.View {
     override fun setupActivityComponent(appComponent: AppComponent) {
         Dagger${provider.pageName.value}Component //如找不到该类,请编译一下项目
                 .builder()
@@ -48,12 +48,16 @@ class ${provider.pageName.value}Activity : SimpleBaseActivity<${provider.pageNam
 
 private fun armsActivityJava(provider: ArmsPluginTemplateProviderImpl) = """
 package ${provider.activityPackageName.value};
-import android.app.Activity
+import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.os.Bundle;
 import com.jess.arms.di.component.AppComponent;
-import cn.skytech.iglobalwin.app.base.SimpleBaseActivity;
+import com.jess.arms.base.BaseActivity;
+import static com.jess.arms.utils.Preconditions.checkNotNull;
+import android.content.Intent;
+import com.jess.arms.utils.ArmsUtils;
+
 import ${provider.componentPackageName.value}.Dagger${provider.pageName.value}Component;
 import ${provider.moudlePackageName.value}.${provider.pageName.value}Module;
 import ${provider.contractPackageName.value}.${provider.pageName.value}Contract;
@@ -61,13 +65,13 @@ import ${provider.presenterPackageName.value}.${provider.pageName.value}Presente
 import ${provider.appPackageName.value}.R;
 
 ${commonAnnotation(provider)}
-public class ${provider.pageName.value}Activity extends SimpleBaseActivity<${provider.pageName.value}Presenter> implements ${provider.pageName.value}Contract.View {
+public class ${provider.pageName.value}Activity extends BaseActivity<${provider.pageName.value}Presenter> implements ${provider.pageName.value}Contract.View {
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         Dagger${provider.pageName.value}Component //如找不到该类,请编译一下项目
                 .builder()
                 .appComponent(appComponent)
-                .view(this)
+                .${provider.pageName.value[0].toLowerCase()}${provider.pageName.value.substring(1, provider.pageName.value.length)}Module(new ${provider.pageName.value}Module(this))
                 .build()
                 .inject(this);
     }
@@ -79,17 +83,34 @@ public class ${provider.pageName.value}Activity extends SimpleBaseActivity<${pro
     
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        //setToolBar(toolbar, "${provider.pageName.value}");
         
-        initListener();
     }
     
-    public void initListener() {
-    
+    @Override
+    public void showLoading() {
+        
+    }
+
+    @Override
+    public void hideLoading() {
+        
     }
     
-    public Activity getActivity(){
-        return this;
+    @Override
+    public void showMessage(@NonNull String message) {
+        checkNotNull(message);
+        ArmsUtils.snackbarText(message);
+    }
+    
+    @Override
+    public void launchActivity(@NonNull Intent intent) {
+        checkNotNull(intent);
+        ArmsUtils.startActivity(intent);
+    }
+    
+    @Override
+    public void killMyself() {
+        finish();
     }
 }
     

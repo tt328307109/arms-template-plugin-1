@@ -18,7 +18,7 @@ ${
         else -> ""
     }
 }
-import cn.skytech.iglobalwin.app.network.base.IBaseView
+import com.jess.arms.mvp.IView
 import com.jess.arms.mvp.IModel
 
 $armsAnnotation
@@ -59,23 +59,23 @@ ${
         else -> ""
     }
 }
-import cn.skytech.iglobalwin.app.network.base.IBaseView;
+import com.jess.arms.mvp.IView;
 import com.jess.arms.mvp.IModel;
 
 $armsAnnotation
 public interface ${provider.pageName.value}Contract {
     //对于经常使用的关于UI的方法可以定义到IView中,如显示隐藏进度条,和显示文字消息
-    interface View extends IBaseView{
+    interface View extends IView{
 ${
     when {
         provider.needActivity.value -> {
             """
-    Activity getActivity();
+    
     """
         }
         provider.needFragment.value -> {
             """
-    Fragment getFragment();
+    
     """
         }
         else -> ""

@@ -15,8 +15,8 @@ class ArmsPluginTemplateProviderImpl : WizardTemplateProvider() {
     private val armsTemplate: Template
         get() = template {
             revision = 1
-            name = "Arms 全家桶 插件版"
-            description = "一键创建 MVPArms 单个页面所需要的全部组件"
+            name = "Arms 全家桶 插件版 - 原始版"
+            description = "amao一键创建 MVPArms 单个页面所需要的全部组件"
             minApi = MIN_API
             minBuildApi = MIN_API
             category = Category.Activity

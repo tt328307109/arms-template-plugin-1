@@ -17,13 +17,13 @@ private fun armsModuleKt(provider: ArmsPluginTemplateProviderImpl): String {
         
 package ${provider.moudlePackageName.value}
 ${
-        if (provider.needActivity.value && provider.needFragment.value)
-            "import com.jess.arms.di.scope.ActivityScope"
-        else if (provider.needActivity.value)
-            "import com.jess.arms.di.scope.ActivityScope"
-        else if (provider.needFragment.value)
-            "import com.jess.arms.di.scope.FragmentScope"
-        else ""
+    if (provider.needActivity.value && provider.needFragment.value)
+        "import com.jess.arms.di.scope.ActivityScope"
+    else if (provider.needActivity.value)
+        "import com.jess.arms.di.scope.ActivityScope"
+    else if (provider.needFragment.value)
+        "import com.jess.arms.di.scope.FragmentScope"
+    else ""
     }
 import dagger.Module
 import dagger.Provides
@@ -53,15 +53,15 @@ fun armsModuleJava(provider: ArmsPluginTemplateProviderImpl): String {
     return """
 package ${provider.moudlePackageName.value};
 ${
-        if (provider.needActivity.value && provider.needFragment.value)
-            "import com.jess.arms.di.scope.ActivityScope;"
-        else if (provider.needActivity.value)
-            "import com.jess.arms.di.scope.ActivityScope;"
-        else if (provider.needFragment.value)
-            "import com.jess.arms.di.scope.FragmentScope;"
-        else ""
+    if (provider.needActivity.value && provider.needFragment.value)
+        "import com.jess.arms.di.scope.ActivityScope;"
+    else if (provider.needActivity.value)
+        "import com.jess.arms.di.scope.ActivityScope;"
+    else if (provider.needFragment.value)
+        "import com.jess.arms.di.scope.FragmentScope;"
+    else ""
     }
-import dagger.Binds;
+import dagger.Provides;
 import dagger.Module;
 import ${provider.contractPackageName.value}.${provider.pageName.value}Contract;
 import ${provider.modelPackageName.value}.${provider.pageName.value}Model;
@@ -69,10 +69,41 @@ import ${provider.modelPackageName.value}.${provider.pageName.value}Model;
 $armsAnnotation
 @Module
  //构建${provider.pageName.value}Module时,将View的实现类传进来,这样就可以提供View的实现类给presenter
-public abstract class ${provider.pageName.value}Module {
+public class ${provider.pageName.value}Module {
+
+    private ${provider.pageName.value}Contract.View view;
     
-    @Binds
-    abstract ${provider.pageName.value}Contract.Model bind${provider.pageName.value}Model(${provider.pageName.value}Model model);
+    public ${provider.pageName.value}Module(${provider.pageName.value}Contract.View view) {
+    this.view = view;
+    }
+    
+    ${
+    if (provider.needActivity.value && provider.needFragment.value)
+        "@ActivityScope"
+    else if (provider.needActivity.value)
+        "@ActivityScope"
+    else if (provider.needFragment.value)
+        "@FragmentScope"
+    else ""
+    }
+    @Provides
+    ${provider.pageName.value}Contract.View provide${provider.pageName.value}View() {
+        return this.view;
+    }
+    
+    ${
+    if (provider.needActivity.value && provider.needFragment.value)
+        "@ActivityScope"
+    else if (provider.needActivity.value)
+        "@ActivityScope"
+    else if (provider.needFragment.value)
+        "@FragmentScope"
+    else ""
+    }
+    @Provides
+    ${provider.pageName.value}Contract.Model provide${provider.pageName.value}Model(${provider.pageName.value}Model model) {
+        return model;
+    }
 }   
 """
 }
