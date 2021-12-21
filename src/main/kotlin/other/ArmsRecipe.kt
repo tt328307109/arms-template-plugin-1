@@ -34,7 +34,6 @@ fun RecipeExecutor.armsRecipe(provider: ArmsPluginTemplateProviderImpl, data: Mo
         open(fragmentFile)
     }
 
-
     if (provider.needContract.value) {
         val contractFile = File(data.rootDir, "${fFmSlashedPackageName(provider.contractPackageName.value)}/${provider.pageName.value}Contract.$languageSuffix")
         save(armsContract(isKt, provider), contractFile)
@@ -48,7 +47,7 @@ fun RecipeExecutor.armsRecipe(provider: ArmsPluginTemplateProviderImpl, data: Mo
         save(armsModel(isKt, provider), modelFile)
     }
 
-    if (provider.needDagger.value) {
+    if (provider.needDagger.value && !isKt) {//kotlin版本不生成module和component
         val componentFile = File(data.rootDir, "${fFmSlashedPackageName(provider.componentPackageName.value)}/${provider.pageName.value}Component.$languageSuffix")
         val moduleFile = File(data.rootDir, "${fFmSlashedPackageName(provider.moudlePackageName.value)}/${provider.pageName.value}Module.$languageSuffix")
         save(armsComponent(isKt, provider), componentFile)

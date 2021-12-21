@@ -7,41 +7,26 @@ fun armsActivity(isKt: Boolean, provider: ArmsPluginTemplateProviderImpl) = if (
 
 private fun armsActivityKt(provider: ArmsPluginTemplateProviderImpl) = """
 package ${provider.activityPackageName.value}
-import android.app.Activity
 import android.os.Bundle
-import com.jess.arms.di.component.AppComponent
-import com.jess.arms.base.BaseActivity
-import ${provider.componentPackageName.value}.Dagger${provider.pageName.value}Component
-import ${provider.moudlePackageName.value}.${provider.pageName.value}Module
-import ${provider.contractPackageName.value}.${provider.pageName.value}Contract
-import ${provider.presenterPackageName.value}.${provider.pageName.value}Presenter
 import ${provider.appPackageName.value}.R
-import kotlinx.android.synthetic.main.base_title.*
+import ${provider.presenterPackageName.value}.${provider.pageName.value}Presenter
+import ${provider.contractPackageName.value}.${provider.pageName.value}Contract
+import ${provider.appPackageName.value}.mvp.ui.base.BaseModuledActivity
 
 ${commonAnnotation(provider)}
-class ${provider.pageName.value}Activity : BaseActivity<${provider.pageName.value}Presenter>() , ${provider.pageName.value}Contract.View {
-    override fun setupActivityComponent(appComponent: AppComponent) {
-        Dagger${provider.pageName.value}Component //如找不到该类,请编译一下项目
-                .builder()
-                .appComponent(appComponent)
-                .${provider.pageName.value[0].toLowerCase()}${provider.pageName.value.substring(1, provider.pageName.value.length)}Module(${provider.pageName.value}Module(this))
-                .build()
-                .inject(this)
+class ${provider.pageName.value}Activity : BaseModuledActivity<${provider.pageName.value}Presenter>() , ${provider.pageName.value}Contract.View {
+   
+    override fun createPresenter(): ${provider.pageName.value}Presenter {
+        return ${provider.pageName.value}Presenter()
     }
+    
     override fun initView(savedInstanceState: Bundle?): Int {
         return R.layout.${provider.activityLayoutName.value} //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
     
     override fun initData(savedInstanceState: Bundle?) {
-        setToolBar(toolbar, "${provider.pageName.value}")
-        
-        initListener()
-    }
-    private fun initListener() {
     
     }
-    
-    override fun getActivity(): Activity = this
 }
     
 """

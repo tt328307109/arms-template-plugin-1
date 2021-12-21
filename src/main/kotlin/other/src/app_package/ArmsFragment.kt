@@ -7,53 +7,46 @@ fun armsFragment(isKt: Boolean, provider: ArmsPluginTemplateProviderImpl) = if (
 
 private fun armsFragmentKt(provider: ArmsPluginTemplateProviderImpl) = """
 package ${provider.fragmentPackageName.value}
-import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.jess.arms.base.BaseFragment
-import com.jess.arms.di.component.AppComponent
-import ${provider.componentPackageName.value}.Dagger${provider.pageName.value}Component
-import ${provider.moudlePackageName.value}.${provider.pageName.value}Module
+import ${provider.appPackageName.value}.mvp.ui.base.BaseModuleFragment
+
 import ${provider.contractPackageName.value}.${provider.pageName.value}Contract
 import ${provider.presenterPackageName.value}.${provider.pageName.value}Presenter
 import ${provider.appPackageName.value}.R
-import kotlinx.android.synthetic.main.base_title.*
 
 ${commonAnnotation(provider)}
-class ${provider.pageName.value}Fragment : SimpleBaseFragment<${provider.pageName.value}Presenter>() , ${provider.pageName.value}Contract.View{
+class ${provider.pageName.value}Fragment : BaseModuleFragment<${provider.pageName.value}Presenter>() , ${provider.pageName.value}Contract.View{
     companion object {
-    fun newInstance():${provider.pageName.value}Fragment {
-        val fragment = ${provider.pageName.value}Fragment()
-        return fragment
+        fun newInstance():${provider.pageName.value}Fragment {
+            val fragment = ${provider.pageName.value}Fragment()
+            return fragment
+        }
     }
+    
+    override fun createPresenter(): ${provider.pageName.value}Presenter {
+        return ${provider.pageName.value}Presenter()
     }
-    override fun setupFragmentComponent(appComponent:AppComponent) {
-        Dagger${provider.pageName.value}Component //如找不到该类,请编译一下项目
-                .builder()
-                .appComponent(appComponent)
-                .${provider.pageName.value[0].toLowerCase()}${provider.pageName.value.substring(1,provider.pageName.value.length)}Module(${provider.pageName.value}Module(this))
-                .build()
-                .inject(this)
-    }
+    
     override fun initView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):View{
         return inflater.inflate(R.layout.${provider.fragmentLayoutName.value}, container, false)
     }
+    
     /**
      * 在 onActivityCreate()时调用
      */
     override fun initData(savedInstanceState: Bundle?) {
-        setToolBarNoBack(toolbar, "${provider.pageName.value}")
-        
-        initListener()
     }
     
-    private fun initListener() {
+    override fun setData(data: Any?) {
     
     }
     
-    override fun getFragment(): Fragment = this
+    override fun showMessage(message: String) {
+
+    }
 }
     
 """
